@@ -1,0 +1,60 @@
+import random
+
+original_students = [
+    "Alex", "Brianna", "Carlos", "Daniel", "Emma",
+    "Fatima", "Gabriel", "Hannah", "Isaiah", "Jasmine",
+    "Kevin", "Lily", "Marcus", "Noah", "Olivia",
+    "Priya", "Ryan", "Sofia", "Tyler", "Zoe"
+]
+
+exceptions = []
+answer = input("Do you want to enter exceptions? (yes/no): ").lower()
+
+if answer == "yes":
+    print("Enter names of two students who CANNOT be together.")
+    print("Type 'done' when finished.")
+    
+    while True:
+        student1 = input("First student name: ")
+        if student1.lower() == "done":
+            break
+        student2 = input("Second student name: ")
+        exceptions.append((student1, student2))
+
+while True:
+    students = original_students.copy()
+    
+    group_size = int(input("\nHow many students per group? "))
+    
+    random.shuffle(students)
+    groups = []
+    
+    while students:
+        group = students[:group_size]
+        students = students[group_size:]
+        
+        
+        valid_group = True
+        for s1, s2 in exceptions:
+            if s1 in group and s2 in group:
+                valid_group = False
+                break
+        
+        if not valid_group:
+            random.shuffle(original_students)
+            students = original_students.copy()
+            groups = []
+            continue
+        
+        groups.append(group)
+    
+    
+    print("\nFinal Groups:")
+    for i, group in enumerate(groups, start=1):
+        print(f"Group {i}: {group}")
+    
+    
+    again = input("\nDo you want to create another grouping? (yes/no): ").lower()
+    if again != "yes":
+        print("Program ended.")
+        break
