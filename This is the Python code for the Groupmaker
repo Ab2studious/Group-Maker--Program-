@@ -1,6 +1,6 @@
 import random
 
-original_students = [
+students = [
     "Alex", "Brianna", "Carlos", "Daniel", "Emma",
     "Fatima", "Gabriel", "Hannah", "Isaiah", "Jasmine",
     "Kevin", "Lily", "Marcus", "Noah", "Olivia",
@@ -9,60 +9,73 @@ original_students = [
 
 exceptions = []
 
-answer = input("Do you want to enter exceptions? (yes/no): ").lower()
+# ask for exceptions
+while True:
+    answer = input("Do you want exceptions? (yes/no): ").lower()
+    if answer == "yes" or answer == "no":
+        break
+    else:
+        print("type yes or no")
 
 if answer == "yes":
-    print("Enter names of two students who CANNOT be together.")
-    print("Type 'done' when finished.")
-
     while True:
-        student1 = input("First student name: ")
+        s1 = input("first student: ")
+        if s1 not in students:
+            print("not in list")
+            continue
 
-        if student1.lower() == "done":
+        s2 = input("second student: ")
+        if s2 not in students:
+            print("not in list")
+            continue
+
+        exceptions.append((s1, s2))
+
+        more = input("add another? (yes/no): ").lower()
+        if more != "yes":
             break
 
-        if student1 not in original_students:
-            print("Error: That student is not in the list. Please try again.")
-            continue
-
-        student2 = input("Second student name: ")
-
-        if student2 not in original_students:
-            print("Error: That student is not in the list. Please try again.")
-            continue
-
-        exceptions.append((student1, student2))
-
-
+# main loop
 while True:
 
-    group_size = int(input("\nHow many students per group? "))
-
+    # group size input
     while True:
-        students = original_students.copy()
-        random.shuffle(students)
+        try:
+            size = int(input("group size: "))
+            if size > 0:
+                break
+            else:
+                print("must be > 0")
+        except:
+            print("enter a number")
+
+    # try until valid groups
+    while True:
+        temp = students.copy()
+        random.shuffle(temp)
+
         groups = []
 
-        for i in range(0, len(students), group_size):
-            groups.append(students[i:i+group_size])
+        for i in range(0, len(temp), size):
+            groups.append(temp[i:i+size])
 
-        valid = True
-        for group in groups:
-            for s1, s2 in exceptions:
-                if s1 in group and s2 in group:
-                    valid = False
-                    break
-            if not valid:
-                break
+        good = True
 
-        if valid:
+        for g in groups:
+            for pair in exceptions:
+                if pair[0] in g and pair[1] in g:
+                    good = False
+
+        if good:
             break
 
-    print("\nFinal Groups:")
-    for i, group in enumerate(groups, start=1):
-        print(f"Group {i}: {group}")
+    # print groups
+    print("\nGroups:")
+    num = 1
+    for g in groups:
+        print("Group", num, ":", ", ".join(g))
+        num += 1
 
-    again = input("\nDo you want to create another grouping? (yes/no): ").lower()
+    again = input("\nagain? (yes/no): ").lower()
     if again != "yes":
-        print("Program ended.")
         break
