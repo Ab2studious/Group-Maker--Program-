@@ -1,5 +1,6 @@
 import random
 
+# list of all students
 students = [
     "Alex", "Brianna", "Carlos", "Daniel", "Emma",
     "Fatima", "Gabriel", "Hannah", "Isaiah", "Jasmine",
@@ -7,23 +8,27 @@ students = [
     "Priya", "Ryan", "Sofia", "Tyler", "Zoe"
 ]
 
+# list to store pairs of students who CANNOT be together
 exceptions = []
 
-# ask for exceptions
 while True:
     answer = input("Do you want exceptions? (yes/no): ").lower()
+    
     if answer == "yes" or answer == "no":
         break
     else:
         print("type yes or no")
 
+# if user wants exceptions, keep asking
 if answer == "yes":
     while True:
+        # get first student
         s1 = input("first student: ")
         if s1 not in students:
             print("not in list")
-            continue
+            continue  # go back and ask again
 
+        # get second student
         s2 = input("second student: ")
         if s2 not in students:
             print("not in list")
@@ -31,17 +36,18 @@ if answer == "yes":
 
         exceptions.append((s1, s2))
 
+        # ask if they want to add more exceptions
         more = input("add another? (yes/no): ").lower()
         if more != "yes":
             break
 
-# main loop
 while True:
 
-    # group size input
+
     while True:
         try:
             size = int(input("group size: "))
+            
             if size > 0:
                 break
             else:
@@ -49,29 +55,46 @@ while True:
         except:
             print("enter a number")
 
-    # try until valid groups
     while True:
-        temp = students.copy()
-        random.shuffle(temp)
+        temp = students.copy()     # make a copy so original list is safe
+        random.shuffle(temp)       # mix up the students randomly
 
-        groups = []
+        groups = []                # this will be a 2D list (list of groups)
+        current_group = []         # temporary group
 
-        for i in range(0, len(temp), size):
-            groups.append(temp[i:i+size])
+        count = 0  # keeps track of how many students are in current group
 
-        good = True
+        # go through each student
+        for student in temp:
+            current_group.append(student)
+            count += 1
+
+            # if group reaches the desired size
+            if count == size:
+                groups.append(current_group)
+                current_group = []   # reset for next group
+                count = 0
+
+        # if there are leftover students, add them as a group
+        if current_group:
+            groups.append(current_group)
+
+   
+        good = True  # assume groups are valid
 
         for g in groups:
             for pair in exceptions:
+        
                 if pair[0] in g and pair[1] in g:
                     good = False
 
+        # if everything is fine, stop trying
         if good:
             break
 
-    # print groups
     print("\nGroups:")
     num = 1
+
     for g in groups:
         print("Group", num, ":", ", ".join(g))
         num += 1
