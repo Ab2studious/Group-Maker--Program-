@@ -82,11 +82,10 @@ while True:
    
         good = True  # assume groups are valid
 
-        for g in groups:
-            for pair in exceptions:
-        
-                if pair[0] in g and pair[1] in g:
-                    good = False
+        for group in groups:
+        for pair in exceptions:
+        if pair[0] in group and pair[1] in group:
+            good = False
 
         # if everything is fine, stop trying
         if good:
